@@ -1,0 +1,63 @@
+{
+  "cluster_name": "manufacturing-dev-cluster",
+  "spark_version": "13.3.x-scala2.12",
+  "node_type_id": "i3.xlarge",
+  "driver_node_type_id": "i3.xlarge",
+  "num_workers": 1,
+  "autoscale": {
+    "min_workers": 1,
+    "max_workers": 3
+  },
+  "auto_termination_minutes": 30,
+  "enable_elastic_disk": true,
+  "disk_spec": {
+    "disk_type": {
+      "ebs_volume_type": "GENERAL_PURPOSE_SSD"
+    },
+    "disk_size": 100
+  },
+  "aws_attributes": {
+    "first_on_demand": 1,
+    "availability": "SPOT_WITH_FALLBACK",
+    "zone_id": "us-east-1a",
+    "instance_profile_arn": "arn:aws:iam::123456789012:instance-profile/databricks-instance-profile",
+    "spot_bid_price_percent": 50,
+    "ebs_volume_type": "GENERAL_PURPOSE_SSD",
+    "ebs_volume_count": 1,
+    "ebs_volume_size": 100
+  },
+  "spark_conf": {
+    "spark.databricks.cluster.profile": "singleNode",
+    "spark.master": "local[*, 4]",
+    "spark.databricks.delta.preview.enabled": "true",
+    "spark.sql.adaptive.enabled": "true",
+    "spark.sql.adaptive.coalescePartitions.enabled": "true",
+    "spark.serializer": "org.apache.spark.serializer.KryoSerializer",
+    "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+    "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+  },
+  "spark_env_vars": {
+    "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+  },
+  "cluster_log_conf": {
+    "s3": {
+      "destination": "s3://manufacturing-data-pipeline-logs-dev-us-east-1/cluster-logs/dev",
+      "region": "us-east-1"
+    }
+  },
+  "init_scripts": [
+    {
+      "s3": {
+        "destination": "s3://manufacturing-data-pipeline-dev-us-east-1/init-scripts/cluster-init.sh",
+        "region": "us-east-1"
+      }
+    }
+  ],
+  "custom_tags": {
+    "Environment": "Development",
+    "Project": "Manufacturing-Data-Pipeline",
+    "Owner": "DataEngineering",
+    "CostCenter": "Engineering"
+  },
+  "cluster_source": "UI"
+}
